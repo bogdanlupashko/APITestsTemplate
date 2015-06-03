@@ -1,0 +1,24 @@
+<suite name="ExampleFlow">
+
+	<test name="login">
+		<classes>
+			<class name="org.bl.json.jersey.test.TestAuth">
+				<methods>
+					<include name=".*authLogin" />
+				</methods>
+			</class>
+		</classes>
+	</test>
+
+
+	<test name="logout">
+		<classes>
+			<class name="org.bl.json.jersey.test.TestAuth">
+				<methods>
+					<include name=".*authLogout" />
+				</methods>
+			</class>
+		</classes>
+	</test>
+
+</suite>

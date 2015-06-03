@@ -1,0 +1,95 @@
+<html>
+<head>
+    <title>Report</title>
+</head>
+
+<body>
+This page contains info about API tests
+<br>
+
+<script type="text/javascript">
+    function highlightTableRows(tableId, hoverClass) {
+        var table = document.getElementById(tableId);
+
+        if (hoverClass) {
+
+            var hoverClassReg = new RegExp("\\b" + hoverClass + "\\b");
+
+            table.onmouseover = table.onmouseout = function (e) {
+                if (!e) e = window.event;
+                var elem = e.target || e.srcElement;
+                while (!elem.tagName || !elem.tagName.match(/td|th|table/i))
+                    elem = elem.parentNode;
+
+                if (elem.parentNode.tagName == 'TR' && elem.parentNode.parentNode.tagName == 'TBODY') {
+                    var row = elem.parentNode;
+                    if (!row.getAttribute('clickedRow'))
+                        row.className = e.type == "mouseover" ? row.className + " " + hoverClass : row.className.replace(hoverClassReg, " ");
+                }
+            };
+        }
+    }
+</script>
+
+<script src="src/main/resources/js/jquery.min.js"></script>
+<script src="src/main/resources/js/jquery.json-view.js"></script>
+<link href="src/main/resources/js/jquery.json-view.css" rel="stylesheet">
+
+<style type="text/css">
+    table th {
+        background-color: white;
+    }
+
+    .hoverRow {
+        background-color: aliceblue;
+    }
+    .red {
+        background-color: rgba(255, 0, 0, 0.31);
+        border: 1px solid red;
+    }
+    .green {
+        background-color: rgba(0, 128, 0, 0.32);
+        border:1px solid green;
+    }
+</style>
+
+<table id='report' cellpadding="20" cellspacing="3" border="0" style="empty-cells:show">
+
+    <tr bgcolor="$headerBackgroundColor">
+
+        <td align="center"><b>Test description</b>
+        <td align="center"><b>API doc</b>
+        <td align="center"><b>Response</b>
+    </tr>
+
+    #foreach( $response in $responses)
+            #if ($response.status)
+                <tr class="green">
+                <td>$response.description</td>
+                <td><a href="$response.docLink">$response.docLink</a></td>
+                <td>
+                    <div id=$velocityCount></div>
+                    <script>
+                        $(function () {
+                            $('#' +$velocityCount).jsonView(JSON.stringify($response.responseJson));
+                        });
+                    </script>
+                </td>
+                </tr>
+            #else
+                <tr class="red">
+                <td>$response.description</td>
+                <td><a href="$response.docLink">$response.docLink</a></td>
+                <td>$response.responseJson</td>
+                </tr>
+            #end
+    #end
+
+</table>
+
+<script type="text/javascript">
+    highlightTableRows("report", "hoverRow");
+</script>
+
+</body>
+</html>
